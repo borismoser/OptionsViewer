@@ -75,8 +75,8 @@ def main():
             start_date = pd.Timestamp(start_date)
             end_date = pd.Timestamp(end_date)
 
-            # Create matrix view
-            matrix_df, column_headers = create_matrix_view(
+            # Create and display matrix view
+            matrix_df, headers = create_matrix_view(
                 processed_data,
                 selected_symbol,
                 start_date,
@@ -90,70 +90,24 @@ def main():
             # Format the strike price column
             matrix_df['Strike'] = matrix_df['Strike'].apply(lambda x: f"{x:.2f}")
 
-            # Create custom header HTML
-            header_html = """
-            <div style="text-align: center; padding: 10px;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <th style="border: none; width: 100px;">Strike</th>
-            """
-
-            # Add date headers
-            date_columns = [col for col in matrix_df.columns if col != 'Strike' and not col.endswith('_put')]
-            for date in date_columns:
-                expiry_date = pd.Timestamp(date)
-                formatted_date = expiry_date.strftime('%Y-%m-%d')
-                header_html += f'<th colspan="2" style="border: 1px solid #ddd; text-align: center; padding: 5px;">{formatted_date}</th>'
-
-            header_html += """
-                    </tr>
-                    <tr>
-                        <th style="border: none;"></th>
-            """
-
-            # Add Call/Put subheaders
-            for _ in date_columns:
-                header_html += '<th style="border: 1px solid #ddd; text-align: center; padding: 5px;">Call</th>'
-                header_html += '<th style="border: 1px solid #ddd; text-align: center; padding: 5px;">Put</th>'
-
-            header_html += """
-                    </tr>
-                </table>
-            </div>
-            """
-
-            # Display the custom header
-            st.markdown(header_html, unsafe_allow_html=True)
-
-            # Configure columns for the data display
-            column_config = {
-                "Strike": st.column_config.TextColumn(
-                    "Strike",
-                    width="small",
-                )
-            }
-
-            # Configure expiry date columns
-            for date in date_columns:
-                column_config[date] = st.column_config.TextColumn(
-                    "Call",
-                    width="medium",
-                )
-                column_config[f"{date}_put"] = st.column_config.TextColumn(
-                    "Put",
-                    width="medium",
-                )
-
-            # Display the data
+            # Display the matrix with custom formatting
             st.dataframe(
                 matrix_df,
-                column_config=column_config,
+                column_config={
+                    "Strike": st.column_config.TextColumn(
+                        "Strike",
+                        width="small",
+                    ),
+                    **{col: st.column_config.TextColumn(
+                        col,
+                        width="medium",
+                    ) for col in matrix_df.columns if col != "Strike"}
+                },
                 hide_index=True
             )
 
         except Exception as e:
             st.error(f"An error occurred while processing the file: {str(e)}")
-            st.exception(e)
 
     else:
         st.info("Please upload an Excel file to begin analysis.")

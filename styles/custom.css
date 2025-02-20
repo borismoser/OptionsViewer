@@ -29,65 +29,12 @@ h3 {
 
 /* DataFrame styling */
 .dataframe {
-    font-family: 'Courier New', monospace !important;
+    font-family: 'Arial', sans-serif !important;
     font-size: 0.9rem !important;
-    white-space: nowrap !important;
-    margin-top: 0 !important;
-    border-top: none !important;
-}
-
-/* Custom header table styling */
-.stMarkdown table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Courier New', monospace !important;
-    font-size: 0.9rem !important;
-    margin-bottom: 0 !important;
-}
-
-.stMarkdown th {
-    background-color: #f0f2f6;
-    padding: 5px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-/* Table header styling */
-.dataframe th {
-    background-color: #f0f2f6 !important;
-    font-weight: 600 !important;
-    text-align: center !important;
-    padding: 0.5rem !important;
-    white-space: pre-wrap !important;
-    min-width: 100px !important;
-    border-top: none !important;
-}
-
-/* Table cell styling */
-.dataframe td {
-    font-family: 'Courier New', monospace !important;
-    padding: 0.25rem 0.5rem !important;
-    text-align: right !important;
-}
-
-/* Strike price column styling */
-.dataframe td:first-child {
-    font-weight: 600 !important;
-    background-color: #f8f9fa !important;
-}
-
-/* Alternating row colors */
-.dataframe tr:nth-child(even) {
-    background-color: #f8f9fa !important;
 }
 
 /* Select box styling */
 .stSelectbox {
-    margin-bottom: 1rem;
-}
-
-/* Date input styling */
-.stDateInput {
     margin-bottom: 1rem;
 }
 
@@ -105,4 +52,20 @@ h3 {
     padding: 1rem;
     border-radius: 0.5rem;
     margin: 1rem 0;
+}
+
+/* Table header styling */
+th {
+    background-color: #f0f2f6 !important;
+    font-weight: 600 !important;
+}
+
+/* Table cell styling */
+td {
+    font-family: 'Courier New', monospace !important;
+}
+
+/* Hover effect for interactive elements */
+.stSelectbox:hover, .stFileUploader:hover {
+    border-color: #0066cc;
 }

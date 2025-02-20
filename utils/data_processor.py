@@ -50,6 +50,15 @@ def get_date_range_defaults(df):
 def create_matrix_view(df, symbol, start_date=None, end_date=None):
     """
     Create horizontal matrix view with all expiry dates within range.
+
+    Parameters:
+    df (pandas.DataFrame): Processed options data
+    symbol (str): Selected underlying asset symbol
+    start_date (datetime): Start date for expiry filter
+    end_date (datetime): End date for expiry filter
+
+    Returns:
+    tuple: (matrix_df, column_headers) Formatted DataFrame and column headers
     """
     # Filter data for selected symbol
     filtered_df = df[df['symbol'] == symbol].copy()
@@ -70,24 +79,23 @@ def create_matrix_view(df, symbol, start_date=None, end_date=None):
 
     # Create column headers
     column_headers = ['Strike']
-    for expiry in expiry_dates:
-        expiry_str = expiry.strftime('%Y-%m-%d')
-        column_headers.extend([f'{expiry_str}', f"{expiry_str}_put"])
-
 
     # Process each expiry date
     for expiry in expiry_dates:
         expiry_str = expiry.strftime('%Y-%m-%d')
+        column_headers.extend([f'{expiry_str} C', f'{expiry_str} P'])
+
+        # Filter data for this expiry
+        expiry_data = filtered_df[filtered_df['expiry_date'] == expiry]
 
         # Process calls and puts
         for strike in strikes:
             row_idx = result_df[result_df['Strike'] == strike].index[0]
 
             # Process call options
-            call_data = filtered_df[
-                (filtered_df['strike'] == strike) & 
-                (filtered_df['option_type'] == 'CALL') &
-                (filtered_df['expiry_date'] == expiry)
+            call_data = expiry_data[
+                (expiry_data['strike'] == strike) & 
+                (expiry_data['option_type'] == 'CALL')
             ]
             call_value = ''
             if not call_data.empty and call_data['last_price'].iloc[0] > 0:
@@ -96,10 +104,9 @@ def create_matrix_view(df, symbol, start_date=None, end_date=None):
                 call_value = f"{ticker:<6} {price:>6.2f}"
 
             # Process put options
-            put_data = filtered_df[
-                (filtered_df['strike'] == strike) & 
-                (filtered_df['option_type'] == 'PUT') &
-                (filtered_df['expiry_date'] == expiry)
+            put_data = expiry_data[
+                (expiry_data['strike'] == strike) & 
+                (expiry_data['option_type'] == 'PUT')
             ]
             put_value = ''
             if not put_data.empty and put_data['last_price'].iloc[0] > 0:
@@ -107,13 +114,15 @@ def create_matrix_view(df, symbol, start_date=None, end_date=None):
                 price = put_data['last_price'].iloc[0]
                 put_value = f"{ticker:<6} {price:>6.2f}"
 
-            # Add columns for this expiry date
-            if expiry_str not in result_df.columns:
-                result_df[expiry_str] = ''
-                result_df[f"{expiry_str}_put"] = ''
+            # Add columns if they don't exist
+            call_col = f'{expiry_str} C'
+            put_col = f'{expiry_str} P'
+            if call_col not in result_df.columns:
+                result_df[call_col] = ''
+                result_df[put_col] = ''
 
             # Set values
-            result_df.at[row_idx, expiry_str] = call_value
-            result_df.at[row_idx, f"{expiry_str}_put"] = put_value
+            result_df.at[row_idx, call_col] = call_value
+            result_df.at[row_idx, put_col] = put_value
 
     return result_df, column_headers
