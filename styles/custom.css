@@ -39,11 +39,9 @@ h3 {
     width: auto !important;
 }
 
-/* Alternating column pair colors */
-[data-testid="stDataFrame"] th:nth-child(4n+0),
-[data-testid="stDataFrame"] th:nth-child(4n-1),
-[data-testid="stDataFrame"] td:nth-child(4n+0),
-[data-testid="stDataFrame"] td:nth-child(4n-1) {
+/* Alternating column colors */
+[data-testid="stDataFrame"] th:nth-child(odd):not(:first-child),
+[data-testid="stDataFrame"] td:nth-child(odd):not(:first-child) {
     background-color: #f0f2f6 !important;
 }
 
