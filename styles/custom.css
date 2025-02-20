@@ -29,12 +29,46 @@ h3 {
 
 /* DataFrame styling */
 .dataframe {
-    font-family: 'Arial', sans-serif !important;
+    font-family: 'Courier New', monospace !important;
     font-size: 0.9rem !important;
+    white-space: nowrap !important;
+}
+
+/* Table header styling */
+th {
+    background-color: #f0f2f6 !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    padding: 0.5rem !important;
+    white-space: pre-wrap !important;
+    min-width: 100px !important;
+}
+
+/* Table cell styling */
+td {
+    font-family: 'Courier New', monospace !important;
+    padding: 0.25rem 0.5rem !important;
+    text-align: right !important;
+}
+
+/* Strike price column styling */
+td:first-child {
+    font-weight: 600 !important;
+    background-color: #f8f9fa !important;
+}
+
+/* Alternating row colors */
+tr:nth-child(even) {
+    background-color: #f8f9fa !important;
 }
 
 /* Select box styling */
 .stSelectbox {
+    margin-bottom: 1rem;
+}
+
+/* Date input styling */
+.stDateInput {
     margin-bottom: 1rem;
 }
 
@@ -52,20 +86,4 @@ h3 {
     padding: 1rem;
     border-radius: 0.5rem;
     margin: 1rem 0;
-}
-
-/* Table header styling */
-th {
-    background-color: #f0f2f6 !important;
-    font-weight: 600 !important;
-}
-
-/* Table cell styling */
-td {
-    font-family: 'Courier New', monospace !important;
-}
-
-/* Hover effect for interactive elements */
-.stSelectbox:hover, .stFileUploader:hover {
-    border-color: #0066cc;
 }

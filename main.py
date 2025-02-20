@@ -75,8 +75,8 @@ def main():
             start_date = pd.Timestamp(start_date)
             end_date = pd.Timestamp(end_date)
 
-            # Create and display matrix view
-            matrix_df, headers = create_matrix_view(
+            # Create matrix view
+            matrix_df = create_matrix_view(
                 processed_data,
                 selected_symbol,
                 start_date,
@@ -90,19 +90,41 @@ def main():
             # Format the strike price column
             matrix_df['Strike'] = matrix_df['Strike'].apply(lambda x: f"{x:.2f}")
 
+            # Create column configurations
+            column_config = {
+                "Strike": st.column_config.TextColumn(
+                    "Strike Price",
+                    width="small",
+                    help="Strike price of the option"
+                )
+            }
+
+            # Configure expiry date columns
+            date_columns = [col for col in matrix_df.columns if col != 'Strike']
+            for date in date_columns:
+                if date.endswith('_put'):
+                    # Skip _put columns as they'll be combined in the display
+                    continue
+
+                expiry_date = pd.Timestamp(date)
+                formatted_date = expiry_date.strftime('%Y-%m-%d')
+
+                # Create a custom column header with Call/Put subheader
+                column_config[date] = st.column_config.Column(
+                    f"{formatted_date}\nCall",
+                    width="medium",
+                    help=f"Call options expiring on {formatted_date}"
+                )
+                column_config[f"{date}_put"] = st.column_config.Column(
+                    f"{formatted_date}\nPut",
+                    width="medium",
+                    help=f"Put options expiring on {formatted_date}"
+                )
+
             # Display the matrix with custom formatting
             st.dataframe(
                 matrix_df,
-                column_config={
-                    "Strike": st.column_config.TextColumn(
-                        "Strike",
-                        width="small",
-                    ),
-                    **{col: st.column_config.TextColumn(
-                        col,
-                        width="medium",
-                    ) for col in matrix_df.columns if col != "Strike"}
-                },
+                column_config=column_config,
                 hide_index=True
             )
 
