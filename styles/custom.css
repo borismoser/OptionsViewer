@@ -1,0 +1,71 @@
+/* Main container styling */
+.main {
+    padding: 2rem;
+}
+
+/* Header styling */
+.stTitle {
+    font-size: 2.5rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 2rem !important;
+    color: #0066cc !important;
+}
+
+/* Subheader styling */
+h3 {
+    font-size: 1.5rem !important;
+    font-weight: 500 !important;
+    margin: 1.5rem 0 !important;
+    color: #262730 !important;
+}
+
+/* File uploader styling */
+.stFileUploader {
+    margin: 2rem 0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #f8f9fa;
+}
+
+/* DataFrame styling */
+.dataframe {
+    font-family: 'Arial', sans-serif !important;
+    font-size: 0.9rem !important;
+}
+
+/* Select box styling */
+.stSelectbox {
+    margin-bottom: 1rem;
+}
+
+/* Error message styling */
+.stAlert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+/* Info message styling */
+.stInfo {
+    background-color: #e8f0fe;
+    color: #1967d2;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+/* Table header styling */
+th {
+    background-color: #f0f2f6 !important;
+    font-weight: 600 !important;
+}
+
+/* Table cell styling */
+td {
+    font-family: 'Courier New', monospace !important;
+}
+
+/* Hover effect for interactive elements */
+.stSelectbox:hover, .stFileUploader:hover {
+    border-color: #0066cc;
+}
