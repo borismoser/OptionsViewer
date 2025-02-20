@@ -3,44 +3,45 @@ import pandas as pd
 def validate_excel_file(file):
     """
     Validate the uploaded Excel file format and content.
-    
+
     Parameters:
     file: Streamlit uploaded file object
-    
+
     Returns:
     bool: True if file is valid, False otherwise
     """
     try:
-        df = pd.read_excel(file)
-        
+        # Read specific sheet
+        df = pd.read_excel(file, sheet_name='Select')
+
         # Required columns for options data
         required_columns = {
-            'symbol',
-            'expiry_date',
-            'strike',
-            'option_type',
-            'bid',
-            'ask',
-            'volume',
-            'open_interest'
+            'TckrSymb',
+            'Asst',
+            'XprtnDt',
+            'OptnTp',
+            'ExrcPric',
+            'OptnStyle',
+            'Last'
         }
-        
-        # Convert actual columns to lowercase for comparison
-        actual_columns = {col.lower().strip() for col in df.columns}
-        
+
         # Check if all required columns are present
+        actual_columns = set(df.columns)
         if not required_columns.issubset(actual_columns):
+            missing_cols = required_columns - actual_columns
+            print(f"Missing columns: {missing_cols}")
             return False
-            
+
         # Check data types
-        if not pd.api.types.is_numeric_dtype(df['strike']):
+        if not pd.api.types.is_numeric_dtype(df['ExrcPric']):
+            print("Strike price (ExrcPric) must be numeric")
             return False
-        if not pd.api.types.is_numeric_dtype(df['bid']):
+        if not pd.api.types.is_numeric_dtype(df['Last']):
+            print("Last price must be numeric")
             return False
-        if not pd.api.types.is_numeric_dtype(df['ask']):
-            return False
-            
+
         return True
-        
-    except Exception:
+
+    except Exception as e:
+        print(f"Validation error: {str(e)}")
         return False

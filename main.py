@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from utils.data_processor import process_options_data, create_matrix_view
 from utils.validators import validate_excel_file
-import os
 
 # Page configuration
 st.set_page_config(
@@ -21,22 +20,32 @@ def main():
 
     # File upload section
     uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx', 'xls'])
-    
+
     if uploaded_file:
         try:
             # Validate the uploaded file
             if not validate_excel_file(uploaded_file):
-                st.error("Invalid file format. Please ensure your Excel file contains the required columns.")
+                st.error("Invalid file format. Please ensure your Excel file contains the required columns in the 'Select' sheet.")
+                st.markdown("""
+                Required columns:
+                - TckrSymb (Option Ticker)
+                - Asst (Underlying Asset)
+                - XprtnDt (Expiration Date)
+                - OptnTp (Option Type)
+                - ExrcPric (Strike Price)
+                - OptnStyle (Option Style)
+                - Last (Last Price)
+                """)
                 return
 
             # Read and process the data
-            df = pd.read_excel(uploaded_file)
+            df = pd.read_excel(uploaded_file, sheet_name='Select')
             processed_data = process_options_data(df)
 
             # Filters
             st.markdown("### Data Filters")
             col1, col2 = st.columns(2)
-            
+
             with col1:
                 selected_symbol = st.selectbox(
                     "Select Underlying Asset",
@@ -47,7 +56,7 @@ def main():
                 expiry_dates = sorted(processed_data[
                     processed_data['symbol'] == selected_symbol
                 ]['expiry_date'].unique())
-                
+
                 selected_expiry = st.selectbox(
                     "Select Expiry Date",
                     options=expiry_dates
@@ -68,11 +77,10 @@ def main():
                 st.markdown("#### Calls")
                 st.dataframe(
                     calls_df.style.format({
-                        'strike': '${:.2f}',
-                        'bid': '${:.2f}',
-                        'ask': '${:.2f}',
-                        'volume': '{:,.0f}',
-                        'open_interest': '{:,.0f}'
+                        'Strike Price': '${:.2f}',
+                        'Last Price': '${:.2f}'
+                    }).set_properties(**{
+                        'text-align': 'center'
                     })
                 )
 
@@ -80,11 +88,10 @@ def main():
                 st.markdown("#### Puts")
                 st.dataframe(
                     puts_df.style.format({
-                        'strike': '${:.2f}',
-                        'bid': '${:.2f}',
-                        'ask': '${:.2f}',
-                        'volume': '{:,.0f}',
-                        'open_interest': '{:,.0f}'
+                        'Strike Price': '${:.2f}',
+                        'Last Price': '${:.2f}'
+                    }).set_properties(**{
+                        'text-align': 'center'
                     })
                 )
 
