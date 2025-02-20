@@ -76,7 +76,7 @@ def main():
             end_date = pd.Timestamp(end_date)
 
             # Create and display matrix view
-            matrix_df = create_matrix_view(
+            matrix_df, headers = create_matrix_view(
                 processed_data,
                 selected_symbol,
                 start_date,
@@ -97,14 +97,15 @@ def main():
                     "Strike": st.column_config.TextColumn(
                         "Strike",
                         width="small",
+                        help="Strike price",
                     ),
                     **{col: st.column_config.TextColumn(
                         col,
-                        help=f"Format: Call <price> | Put <price>",
+                        help="[Ticker] [Price]",
                     ) for col in matrix_df.columns if col != "Strike"}
                 },
                 hide_index=True,
-                height=800
+                height=800  # Increase visible rows
             )
 
         except Exception as e:
