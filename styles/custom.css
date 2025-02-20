@@ -29,20 +29,27 @@ h3 {
 
 /* DataFrame styling */
 .dataframe {
-    font-family: 'Arial', sans-serif !important;
+    font-family: 'Courier New', monospace !important;
     font-size: 0.9rem !important;
+    white-space: nowrap !important;
+}
+
+/* Table styling */
+[data-testid="stDataFrame"] table {
+    width: auto !important;
+}
+
+/* Alternating column pair colors */
+[data-testid="stDataFrame"] th:nth-child(4n+2),
+[data-testid="stDataFrame"] th:nth-child(4n+3),
+[data-testid="stDataFrame"] td:nth-child(4n+2),
+[data-testid="stDataFrame"] td:nth-child(4n+3) {
+    background-color: #f8f9fa !important;
 }
 
 /* Select box styling */
 .stSelectbox {
     margin-bottom: 1rem;
-}
-
-/* Error message styling */
-.stAlert {
-    padding: 1rem;
-    border-radius: 0.5rem;
-    margin: 1rem 0;
 }
 
 /* Info message styling */
@@ -56,16 +63,12 @@ h3 {
 
 /* Table header styling */
 th {
-    background-color: #f0f2f6 !important;
     font-weight: 600 !important;
+    text-align: center !important;
 }
 
 /* Table cell styling */
 td {
-    font-family: 'Courier New', monospace !important;
-}
-
-/* Hover effect for interactive elements */
-.stSelectbox:hover, .stFileUploader:hover {
-    border-color: #0066cc;
+    text-align: left !important;
+    padding: 4px 8px !important;
 }

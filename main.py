@@ -97,13 +97,15 @@ def main():
                     "Strike": st.column_config.TextColumn(
                         "Strike",
                         width="small",
+                        help="Strike price",
                     ),
                     **{col: st.column_config.TextColumn(
                         col,
-                        width="medium",
+                        help="[Ticker] [Price]",
                     ) for col in matrix_df.columns if col != "Strike"}
                 },
-                hide_index=True
+                hide_index=True,
+                height=800  # Increase visible rows
             )
 
         except Exception as e:
