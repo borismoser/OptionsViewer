@@ -76,7 +76,7 @@ def main():
             end_date = pd.Timestamp(end_date)
 
             # Create matrix view
-            matrix_df = create_matrix_view(
+            matrix_df, column_headers = create_matrix_view(
                 processed_data,
                 selected_symbol,
                 start_date,
@@ -109,7 +109,6 @@ def main():
                 expiry_date = pd.Timestamp(date)
                 formatted_date = expiry_date.strftime('%Y-%m-%d')
 
-                # Create a custom column header with Call/Put subheader
                 column_config[date] = st.column_config.Column(
                     f"{formatted_date}\nCall",
                     width="medium",
@@ -130,6 +129,7 @@ def main():
 
         except Exception as e:
             st.error(f"An error occurred while processing the file: {str(e)}")
+            st.exception(e)  # This will show the full traceback in development
 
     else:
         st.info("Please upload an Excel file to begin analysis.")
