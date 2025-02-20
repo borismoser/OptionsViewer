@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from utils.data_processor import process_options_data, create_matrix_view
+from utils.data_processor import process_options_data, create_matrix_view, get_date_range_defaults
 from utils.validators import validate_excel_file
 
 # Page configuration
@@ -42,15 +42,46 @@ def main():
             df = pd.read_excel(uploaded_file, sheet_name='Select')
             processed_data = process_options_data(df)
 
-            # Asset selection
-            st.markdown("### Select Asset")
-            selected_symbol = st.selectbox(
-                "Select Underlying Asset",
-                options=sorted(processed_data['symbol'].unique())
-            )
+            # Get default date range
+            default_start, default_end = get_date_range_defaults(processed_data)
+
+            # Asset selection and date range filters
+            st.markdown("### Select Asset and Date Range")
+            col1, col2, col3 = st.columns([2, 1, 1])
+
+            with col1:
+                selected_symbol = st.selectbox(
+                    "Select Underlying Asset",
+                    options=sorted(processed_data['symbol'].unique())
+                )
+
+            with col2:
+                start_date = st.date_input(
+                    "Start Date",
+                    value=default_start,
+                    min_value=processed_data['expiry_date'].min(),
+                    max_value=processed_data['expiry_date'].max()
+                )
+
+            with col3:
+                end_date = st.date_input(
+                    "End Date",
+                    value=default_end,
+                    min_value=start_date,
+                    max_value=processed_data['expiry_date'].max()
+                )
+
+            # Convert date inputs to datetime
+            start_date = pd.Timestamp(start_date)
+            end_date = pd.Timestamp(end_date)
 
             # Create and display matrix view
-            matrix_df, headers = create_matrix_view(processed_data, selected_symbol)
+            matrix_df, headers = create_matrix_view(
+                processed_data,
+                selected_symbol,
+                start_date,
+                end_date
+            )
 
             # Display the matrix
             st.markdown("### Options Matrix")

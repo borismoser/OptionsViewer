@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from datetime import datetime, timedelta
 
 def process_options_data(df):
     """
@@ -27,19 +28,47 @@ def process_options_data(df):
 
     return df
 
-def create_matrix_view(df, symbol):
+def get_date_range_defaults(df):
     """
-    Create horizontal matrix view with all expiry dates.
+    Get default date range based on available expiration dates.
+    """
+    today = pd.Timestamp.now().normalize()
+    available_dates = sorted(df['expiry_date'].unique())
+
+    # Find next available date (including today)
+    start_date = next((date for date in available_dates if date >= today), available_dates[0])
+
+    # End date is 12 months from start_date
+    end_date = start_date + pd.DateOffset(months=12)
+
+    # If end date is beyond last available date, use last available
+    if end_date > available_dates[-1]:
+        end_date = available_dates[-1]
+
+    return start_date, end_date
+
+def create_matrix_view(df, symbol, start_date=None, end_date=None):
+    """
+    Create horizontal matrix view with all expiry dates within range.
 
     Parameters:
     df (pandas.DataFrame): Processed options data
     symbol (str): Selected underlying asset symbol
+    start_date (datetime): Start date for expiry filter
+    end_date (datetime): End date for expiry filter
 
     Returns:
     tuple: (matrix_df, column_headers) Formatted DataFrame and column headers
     """
     # Filter data for selected symbol
     filtered_df = df[df['symbol'] == symbol].copy()
+
+    # Apply date range filter if provided
+    if start_date and end_date:
+        filtered_df = filtered_df[
+            (filtered_df['expiry_date'] >= start_date) &
+            (filtered_df['expiry_date'] <= end_date)
+        ]
 
     # Get all unique expiry dates and strikes
     expiry_dates = sorted(filtered_df['expiry_date'].unique())
