@@ -40,11 +40,11 @@ h3 {
 }
 
 /* Alternating column pair colors */
-[data-testid="stDataFrame"] th:nth-child(4n+2),
-[data-testid="stDataFrame"] th:nth-child(4n+3),
-[data-testid="stDataFrame"] td:nth-child(4n+2),
-[data-testid="stDataFrame"] td:nth-child(4n+3) {
-    background-color: #f8f9fa !important;
+[data-testid="stDataFrame"] th:nth-child(4n+0),
+[data-testid="stDataFrame"] th:nth-child(4n-1),
+[data-testid="stDataFrame"] td:nth-child(4n+0),
+[data-testid="stDataFrame"] td:nth-child(4n-1) {
+    background-color: #f0f2f6 !important;
 }
 
 /* Select box styling */
@@ -65,6 +65,7 @@ h3 {
 th {
     font-weight: 600 !important;
     text-align: center !important;
+    padding: 4px 8px !important;
 }
 
 /* Table cell styling */
