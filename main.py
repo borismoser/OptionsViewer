@@ -42,58 +42,38 @@ def main():
             df = pd.read_excel(uploaded_file, sheet_name='Select')
             processed_data = process_options_data(df)
 
-            # Filters
-            st.markdown("### Data Filters")
-            col1, col2 = st.columns(2)
-
-            with col1:
-                selected_symbol = st.selectbox(
-                    "Select Underlying Asset",
-                    options=sorted(processed_data['symbol'].unique())
-                )
-
-            with col2:
-                expiry_dates = sorted(processed_data[
-                    processed_data['symbol'] == selected_symbol
-                ]['expiry_date'].unique())
-
-                selected_expiry = st.selectbox(
-                    "Select Expiry Date",
-                    options=expiry_dates
-                )
-
-            # Create and display matrix view
-            calls_df, puts_df = create_matrix_view(
-                processed_data,
-                selected_symbol,
-                selected_expiry
+            # Asset selection
+            st.markdown("### Select Asset")
+            selected_symbol = st.selectbox(
+                "Select Underlying Asset",
+                options=sorted(processed_data['symbol'].unique())
             )
 
-            # Display matrices side by side
-            st.markdown("### Options Matrix View")
-            col1, col2 = st.columns(2)
+            # Create and display matrix view
+            matrix_df, headers = create_matrix_view(processed_data, selected_symbol)
 
-            with col1:
-                st.markdown("#### Calls")
-                st.dataframe(
-                    calls_df.style.format({
-                        'Strike Price': '${:.2f}',
-                        'Last Price': '${:.2f}'
-                    }).set_properties(**{
-                        'text-align': 'center'
-                    })
-                )
+            # Display the matrix
+            st.markdown("### Options Matrix")
+            st.markdown(f"**{selected_symbol}**")
 
-            with col2:
-                st.markdown("#### Puts")
-                st.dataframe(
-                    puts_df.style.format({
-                        'Strike Price': '${:.2f}',
-                        'Last Price': '${:.2f}'
-                    }).set_properties(**{
-                        'text-align': 'center'
-                    })
-                )
+            # Format the strike price column
+            matrix_df['Strike'] = matrix_df['Strike'].apply(lambda x: f"{x:.2f}")
+
+            # Display the matrix with custom formatting
+            st.dataframe(
+                matrix_df,
+                column_config={
+                    "Strike": st.column_config.TextColumn(
+                        "Strike",
+                        width="small",
+                    ),
+                    **{col: st.column_config.TextColumn(
+                        col,
+                        width="medium",
+                    ) for col in matrix_df.columns if col != "Strike"}
+                },
+                hide_index=True
+            )
 
         except Exception as e:
             st.error(f"An error occurred while processing the file: {str(e)}")
