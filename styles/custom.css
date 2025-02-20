@@ -1,6 +1,8 @@
 /* Main container styling */
 .main {
     padding: 2rem;
+    background-color: #0e1117;
+    color: #fafafa;
 }
 
 /* Header styling */

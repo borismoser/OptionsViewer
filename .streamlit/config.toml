@@ -1,3 +1,4 @@
+
 [server]
 headless = true
 address = "0.0.0.0"
@@ -5,7 +6,10 @@ port = 5000
 
 [theme]
 primaryColor = "#0066cc"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f0f2f6"
-textColor = "#262730"
+backgroundColor = "#0e1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#fafafa"
 font = "sans serif"
+
+[global]
+showWarningOnDirectExecution = false
